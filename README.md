@@ -10,7 +10,7 @@ Install the required tools: `gulp`, `bower`
 npm install -g gulp bower
 ```
 
-Download this repository and remove, after remove .git direcotry :-) 
+Download this repository and remove, after remove .git direcotry
 ```
 
 npm install 
@@ -48,10 +48,10 @@ The root directory:
 │   │   │   ├──  _head_js.html
 │   │   │   ├──  _head_css.html
 │   │   │   └──  _footer_js.html
-│   │	├── _footer.jade
-│   │	├── _header.jade
-│   │	└── _layout.jade
-│	└── index.jade
+│   │   ├── _footer.jade
+│   │   ├── _header.jade
+│   │   └── _layout.jade
+│   └── index.jade
 ├──  nodes_modules/*
 ├──  .bowerrc
 ├──  .gitignore
