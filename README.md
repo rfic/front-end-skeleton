@@ -10,13 +10,14 @@ Install the required tools: `gulp`, `bower`
 npm install -g gulp bower
 ```
 
+and
+
 Download this repository and remove, after remove .git direcotry
 ```
 
-npm install 
-```
+and
 
-bower install 
+npm install; bower install
 ```
 
 ### Use Gulp tasks
