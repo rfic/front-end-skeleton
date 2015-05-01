@@ -28,18 +28,65 @@ var options = {
 /**** Worker ****/
 var App = {  
   
+  log: function  ($text) {
+    gutil.log(gutil.colors.yellow($text));
+  },
+  
   move: function () {
-    gulp.src([options.js])
-      .pipe(gulp.dest(options.dist + '/images/'));  
+    this.log('Move Images');
+    gulp.src([options.src + '/images/'])
+      .pipe(gulp.dest(options.dist));  
+    this.log('Move JS');
     gulp.src([options.js])
       .pipe(gulp.dest(options.dist + '/js/'));
+    this.log('Move CSS');
     gulp.src([options.css])
       .pipe(gulp.dest(options.dist + '/css/'));
+    this.log('Move HTML');
+    gulp.src([options.html])
+      .pipe(gulp.dest(options.dist));
+    return this;
+  },
+  
+  compressJs: function () {
+    this.log('Compress Js');
+    gulp.src([options.dist + '/js/*'])
+        .pipe($.plumber())
+        .pipe($.sourcemaps.init())
+        //.pipe(uglify())
+        //.pipe($.concat('test.js'))
+        .pipe($.sourcemaps.write())
+    return this;
+  },
+  
+  compressBowerJs: function () {
+    this.log('build asset files');
+    var assets = $.useref.assets(),
+        cssFilter = $.filter('/css/*.css'),
+        jsFilter = $.filter('**/*.js');
+        
+    gulp.src(options.html)
+    .pipe($.plumber())
+    .pipe(assets)
+    // Optimize CSS
+    .pipe(cssFilter)
+    .pipe($.csso())
+    .pipe(cssFilter.restore())
+    // Optimize JS
+    //.pipe(jsFilter)
+    //.pipe($.uglify())
+    //.pipe(jsFilter.restore())
+    // .pipe($.rev())
+    //.pipe(assets.restore())
+    //.pipe($.useref())
+    // .pipe($.revReplace())
+    .pipe(gulp.dest(options.dist));    
+        
     return this;
   },
   
   delete: function () {
-    del([options.dist + '/', options.css, options.html, ''], function(err, deletedFiles) {
+    del([options.dist + '/', options.css, options.html], function(err, deletedFiles) {
       gutil.log(gutil.colors.red('Files deleted:'));
       deletedFiles.forEach(function(entry) {
         gutil.log(gutil.colors.yellow(entry));
@@ -48,6 +95,7 @@ var App = {
   },
 
   inject: function () {
+    this.log('Inject');
     var wiredep = require('wiredep').stream;
     var injectStyles = gulp.src([options.css], {
       read: false
@@ -75,6 +123,7 @@ var App = {
   },
   
   jade: function () {
+    this.log('Jade');
     gulp.src(options.jade)
       .pipe($.jade({
         pretty: true
@@ -88,14 +137,12 @@ var App = {
     gulp.src(options.js)
       .pipe($.jshint())
       .pipe($.jshint.reporter('jshint-stylish'))
-      .pipe($.complexity())
-      .pipe(bSync.reload({
-        stream: true 
-      }));
+      .pipe($.complexity());
     return this;
   },
   
   sass: function () {
+    this.log('Sass');
     gulp.src(options.sass)
       .pipe($.plumber())
       .pipe($.sass({
@@ -134,9 +181,9 @@ var App = {
   },
   
   build: function () {
-    this.sass()
-        .jade()
-        .move();
+    this.move()
+        .compressJs()
+        .compressBowerJs();
   },
   
   analyse: function () {
@@ -159,6 +206,7 @@ var App = {
 };
 
 /**** Tasks ****/
+
 /** Remove dist folder, css and html files from src **/
 gulp.task('clean', function() {
   App.delete();
@@ -216,6 +264,6 @@ gulp.task('default', function() {
   .server();
 });
 
-gulp.task('build', function() {
+gulp.task('build',['sass','jade'], function() {
   App.build();
 });

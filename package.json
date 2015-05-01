@@ -25,6 +25,7 @@
     "gulp-csslint": "~0.1.5",
     "gulp-complexity": "~0.3.0",
     "gulp-bump": "~0.3.0",
+    "gulp-sourcemaps": "~1.5.2",
     "gulp-useref": "~1.1.2"
   }
 }

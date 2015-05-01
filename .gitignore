@@ -1,7 +1,7 @@
-./src/bower_components
-./src/styles/*.css
-./src/**/*.html
-./src/*.html
+/src/bower_components/
+/src/styles/*.css
+/src/**/*.html
+/src/*.html
 node_modules
 dist
 .DS_Store
