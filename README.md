@@ -32,8 +32,6 @@ npm install; bower install
 * `gulp bump`
 * `gulp serv`
 
-More information on the gulp tasks in [this README.md](app/templates/gulp/README.md).
-
 The root directory:
 <pre>
 ├──  src/
