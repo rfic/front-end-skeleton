@@ -63,11 +63,4 @@ The root directory:
 </pre>
 
 ## **TODO**
-
-* Script loader: Require, Webpack, none
 * Test framework: Jasmine, Mocha, Qunit
-
-
-## License
-
-MIT
