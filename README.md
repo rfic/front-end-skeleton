@@ -15,8 +15,6 @@ and
 Download this repository and remove, after remove .git direcotry
 ```
 
-and
-
 npm install; bower install
 ```
 
