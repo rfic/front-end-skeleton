@@ -21,16 +21,16 @@ npm install; bower install
 ### Use Gulp tasks
 
 * `gulp` Launch a browser sync server and build dev source files
-* `gulp jade` 
-* `gulp sass`
-* `gulp build`
-* `gulp clean`
-* `gulp inject`
-* `gulp js`
-* `gulp css`
-* `gulp analyse`
-* `gulp bump`
-* `gulp serv`
+* `gulp jade` Convert jada files to html
+* `gulp sass` Convert sass files to css
+* `gulp build` Build production version
+* `gulp clean` Remove tmp files and directories 
+* `gulp inject` Insert js css paths
+* `gulp js` Analyse js code
+* `gulp css` Analyse css code
+* `gulp analyse` Analyse js and css
+* `gulp bump` Update version
+* `gulp serv` Start server
 
 The root directory:
 <pre>

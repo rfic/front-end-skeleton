@@ -18,8 +18,6 @@ var options = {
   css      : './src/styles/*.css',
   js       : './src/scripts/*.js',
   html     : './src/!(_).html',
-  inject   : ['./src/templates/parts/_head_css.html', './src/templates/parts/_head_js.html','./src/templates/parts/_footer_js.html'],
-  templates: './src/templates/parts/',
   wiredep: {
     directory: './src/bower_components'
   }
@@ -32,56 +30,38 @@ var App = {
     gutil.log(gutil.colors.yellow($text));
   },
   
-  move: function () {
+  moveAssets: function () {
     this.log('Move Images');
     gulp.src([options.src + '/images/'])
       .pipe(gulp.dest(options.dist));  
-    this.log('Move JS');
-    gulp.src([options.js])
-      .pipe(gulp.dest(options.dist + '/js/'));
-    this.log('Move CSS');
-    gulp.src([options.css])
-      .pipe(gulp.dest(options.dist + '/css/'));
-    this.log('Move HTML');
-    gulp.src([options.html])
-      .pipe(gulp.dest(options.dist));
     return this;
   },
-  
-  compressJs: function () {
-    this.log('Compress Js');
-    gulp.src([options.dist + '/js/*'])
-        .pipe($.plumber())
-        .pipe($.sourcemaps.init())
-        //.pipe(uglify())
-        //.pipe($.concat('test.js'))
-        .pipe($.sourcemaps.write())
-    return this;
-  },
-  
-  compressBowerJs: function () {
+    
+  public: function () {
     this.log('build asset files');
     var assets = $.useref.assets(),
         cssFilter = $.filter('/css/*.css'),
         jsFilter = $.filter('**/*.js');
         
     gulp.src(options.html)
-    .pipe($.plumber())
-    .pipe(assets)
-    // Optimize CSS
-    .pipe(cssFilter)
-    .pipe($.csso())
-    .pipe(cssFilter.restore())
-    // Optimize JS
-    //.pipe(jsFilter)
-    //.pipe($.uglify())
-    //.pipe(jsFilter.restore())
-    // .pipe($.rev())
-    //.pipe(assets.restore())
-    //.pipe($.useref())
-    // .pipe($.revReplace())
-    .pipe(gulp.dest(options.dist));    
-        
+       .pipe($.plumber())
+       .pipe(assets)
+       // Optimize CSS
+       .pipe(cssFilter)
+       .pipe($.csso())
+       .pipe(cssFilter.restore())
+       // Optimize JS
+       .pipe(jsFilter)
+       .pipe($.sourcemaps.init())
+       .pipe($.uglify())
+       .pipe($.sourcemaps.write())
+       .pipe(jsFilter.restore())
+       // .pipe($.rev())
+       .pipe(assets.restore())
+       .pipe($.useref())
+       // .pipe($.revReplace())
+       .pipe(gulp.dest(options.dist));    
+       
     return this;
   },
   
@@ -113,12 +93,12 @@ var App = {
       ignorePath: '/src/'
     };
     
-    gulp.src(options.inject)
+    gulp.src(options.html)
       .pipe($.plumber())
       .pipe($.inject(injectStyles, injectOptions))
       .pipe($.inject(injectScripts, injectOptions))
       .pipe(wiredep(options.wiredep))
-      .pipe(gulp.dest(options.templates));
+      .pipe(gulp.dest(options.src));
     return this;
   },
   
@@ -178,14 +158,9 @@ var App = {
     gulp.watch(options.html, function(event) {
       bSync.reload(event.path);
     });
+    return this;
   },
-  
-  build: function () {
-    this.move()
-        .compressJs()
-        .compressBowerJs();
-  },
-  
+    
   analyse: function () {
     this.js()
         .css();
@@ -212,15 +187,13 @@ gulp.task('clean', function() {
   App.delete();
 });
 /** Insert CSS and JS paths into loyat parts **/
-gulp.task('inject', function() {
+gulp.task('inject',['jade'], function() {
   App.inject();
 });
 
 /** Convert JADE to HTML **/
 gulp.task('jade', function() {
-  App
-  .inject()
-  .jade();
+  App.jade();
 });
 
 /* java script code quality  */
@@ -258,12 +231,14 @@ gulp.task('serv', function() {
 
 gulp.task('default', function() {
   App
-  .inject()
   .jade()
   .sass()
-  .server();
+  .server()
+  .inject();
 });
 
-gulp.task('build',['sass','jade'], function() {
-  App.build();
+gulp.task('build',['sass','inject'], function() {
+  App
+  .moveAssets()
+  .public();
 });
