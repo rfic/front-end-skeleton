@@ -54,6 +54,7 @@ var App = {
        .pipe(jsFilter)
        .pipe($.sourcemaps.init())
        .pipe($.uglify())
+       .pipe($.minifyCss())
        .pipe($.sourcemaps.write())
        .pipe(jsFilter.restore())
        // .pipe($.rev())
