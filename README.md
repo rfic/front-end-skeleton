@@ -41,10 +41,6 @@ The root directory:
 │   │   └──  app.js
 │   ├──  styles/
 │   ├──  templates/
-│   │   └──  parts/
-│   │   │   ├──  _head_js.html
-│   │   │   ├──  _head_css.html
-│   │   │   └──  _footer_js.html
 │   │   ├── _footer.jade
 │   │   ├── _header.jade
 │   │   └── _layout.jade
